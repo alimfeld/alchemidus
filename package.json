@@ -1,0 +1,20 @@
+{
+  "name": "alchemidus",
+  "version": "0.0.1",
+  "description": "Alchemidus card puzzle game: Emulator and solver",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "alchemidus",
+    "puzzle",
+    "card",
+    "game"
+  ],
+  "author": "aimfeld",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  }
+}
