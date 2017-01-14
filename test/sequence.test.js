@@ -8,8 +8,8 @@ function d(face1, face2) {
   return new Dice(face1 || 3, face2);
 }
 
-function op(cost, next) {
-  return new Operation('ID', 'Type', cost, next);
+function op(cost) {
+  return new Operation('ID', 'Type', cost);
 }
 
 function tr(operation, end) {

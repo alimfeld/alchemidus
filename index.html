@@ -1,6 +1,10 @@
 <html>
   <head>
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <style>
+body {
+  font-family: sans-serif;
+}
 body, #game {
   height: 100%;
   margin: 0;
@@ -22,12 +26,21 @@ body, #game {
 }
 .step {
   position: absolute;
-  top: 20%;
-  left: 20%;
-  width: 60%;
-  background: lightgray;
+  top: 60%;
+  left: 0;
+  bottom: 0;
+  right: 0;
   opacity: 0.5;
   display: flex;
+}
+.remaining2 {
+  background: brown;
+}
+.remaining1 {
+  background: gray;
+}
+.remaining0 {
+  background: gold;
 }
 #remove, #get, #change {
   display: flex;
@@ -35,7 +48,6 @@ body, #game {
 }
 #goal {
   border-top: solid 2px;
-  padding: 5px;
   display: flex;
 }
 #goal div {
@@ -43,13 +55,25 @@ body, #game {
   flex: 1;
 }
 #clay {
-  background: orange;
+  background: brown;
 }
 #iron {
   background: gray;
 }
 #gold {
   background: gold;
+}
+#actions {
+  display: flex;
+  font-size: 120%;
+  text-align: center;
+}
+#actions div {
+  flex: 1;
+  cursor: pointer;
+  margin: 2px;
+  padding: 10px 0 10px 0;
+  background: lightgray;
 }
 .dice {
   display: flex;
@@ -86,7 +110,7 @@ function newGame() {
   clearSteps();
   game = new Game();
   var cnt = 1;
-  game.ops.forEach(op => {
+  game.operations.forEach(op => {
     var div = $("<div class='card'></div>");
     div.append(op.id);
     $("#o" + cnt++).html(div);
@@ -102,9 +126,10 @@ function clearSteps() {
   }
 }
 
-function showStep(step, transition) {
+function showStep(step, transition, remaining) {
   var div = $("<div class='step'></div>");
-  var card = game.ops.indexOf(transition.operation) + 1;
+  div.addClass("remaining" + remaining);
+  var card = game.operations.indexOf(transition.operation) + 1;
   div.append("<div>" + step + "</div>");
   div.append(svg(transition.end));
   $("#o" + card).append(div);
@@ -112,10 +137,17 @@ function showStep(step, transition) {
 
 function showSolution() {
   clearSteps();
+  game.reset();
   var step = 1;
   game.solution.transitions.forEach(tr => {
-    showStep(step++, tr);
+    game.addTransition(tr);
+    showStep(step++, tr, game.remainingTargets.length);
   });
+}
+
+function resetGame() {
+  clearSteps();
+  game.reset();
 }
 
 $(document).ready(function() {
@@ -125,6 +157,9 @@ $(document).ready(function() {
   });
   $("#solve").click(function() {
     showSolution();
+  });
+  $("#reset").click(function() {
+    resetGame();
   });
 });
     </script>
@@ -161,8 +196,9 @@ $(document).ready(function() {
         <div id="gold"></div>
       </div>
       <div id="actions">
-        <button id="new">New Game</button>
-        <button id="solve">Show Solution</button>
+        <div id="new">New Game</div>
+        <div id="solve">Show Solution</div>
+        <div id="reset">Reset Game</div>
       </div>
     </div>
 

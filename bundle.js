@@ -662,11 +662,39 @@ function targets() {
   return [new Dice(randomFace()), new Dice(randomFace(), randomFace())];
 }
 
-function Game() {
-  this.ops = ops();
-  this.start = start();
-  this.targets = targets();
-  this.solution = solve(new Sequence(this.start), this.ops, this.targets);
+class Game {
+  constructor() {
+    this.operations = ops();
+    this.start = start();
+    this.targets = targets();
+    this.solution = solve(new Sequence(this.start), this.operations, this.targets);
+    this.reset();
+  }
+
+  reset() {
+    this.availableOperations = this.operations.slice();
+    this.remainingTargets = this.targets.slice();
+    this.solved = false;
+    this.sequence = new Sequence(this.start);
+    this.cost = 0;
+  }
+
+  addTransition(transition) {
+    var index = this.availableOperations.indexOf(transition.operation);
+    if (index < 0) {
+      return false;
+    }
+    if (!transition.isValidFor(this.sequence)) {
+      return false;
+    }
+    this.availableOperations.splice(index, 1);
+    if (this.remainingTargets[0].equals(transition.end)) {
+      this.remainingTargets.shift();
+    }
+    this.solved = this.remainingTargets.length === 0;
+    this.sequence = this.sequence.add(transition);
+    this.cost = this.sequence.cost;
+  }
 }
 
 module.exports = Game;
@@ -718,6 +746,17 @@ class Transition {
     this.operation = operation;
     this.end = end;
     this.cost = this.operation.cost;
+  }
+
+  isValidFor(sequence) {
+    var valid = false;
+    this.operation.transitions(sequence).forEach(tr => {
+      if (tr.end.equals(this.end)) {
+        valid = true;
+        return;
+      }
+    });
+    return valid;
   }
 
   endsIn(dice) {
