@@ -12,7 +12,7 @@ var operations = {
         next.push(new Dice(dice.lower()));
       }
       return next;
-    }),
+    }, "Remove higher"),
     // R02: Remove lower
     new Operation('R02', 'R', 2, (sequence) => {
       var dice = sequence.end;
@@ -21,7 +21,7 @@ var operations = {
         next.push(new Dice(dice.higher()));
       }
       return next;
-    }),
+    }, "Remove lower"),
     // R03: Remove 1 or 3 or 5
     new Operation('R03', 'R', 3, (sequence) => {
       var dice = sequence.end;
@@ -35,7 +35,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove odd"),
     // R04: Remove 2 or 4 or 6
     new Operation('R04', 'R', 3, (sequence) => {
       var dice = sequence.end;
@@ -49,7 +49,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove even"),
     // R05: Remove 1 or 2 or 3
     new Operation('R05', 'R', 3, (sequence) => {
       var dice = sequence.end;
@@ -63,7 +63,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove 1..3"),
     // R06: Remove 4 or 5 or 6
     new Operation('R06', 'R', 3, (sequence) => {
       var dice = sequence.end;
@@ -77,7 +77,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove 4..6"),
     // R07: Remove face equal to op position
     new Operation('R07', 'R', 0, (sequence) => {
       var dice = sequence.end;
@@ -92,7 +92,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove #"),
     // R08: Remove any
     new Operation('R08', 'R', 10, (sequence) => {
       var dice = sequence.end;
@@ -104,7 +104,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any"),
     // R09: Remove any if sum >= 7
     new Operation('R09', 'R', 1, (sequence) => {
       var dice = sequence.end;
@@ -116,7 +116,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any if sum >= 7"),
     // R10: Remove any if sum == 7
     new Operation('R10', 'R', 1, (sequence) => {
       var dice = sequence.end;
@@ -128,7 +128,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any if sum == 7"),
     // R11: Remove any if sum <= 7
     new Operation('R11', 'R', 2, (sequence) => {
       var dice = sequence.end;
@@ -140,7 +140,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any if sum <= 7"),
     // R12: Remove any if diff <= 2
     new Operation('R12', 'R', 1, (sequence) => {
       var dice = sequence.end;
@@ -152,7 +152,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any if diff <= 2"),
     // R13: Remove any if faces equal
     new Operation('R13', 'R', 1, (sequence) => {
       var dice = sequence.end;
@@ -161,7 +161,7 @@ var operations = {
         next.push(new Dice(dice.face1));
       }
       return next;
-    }),
+    }, "Remove any if equal"),
     // R14: Remove any if sum is even
     new Operation('R14', 'R', 5, (sequence) => {
       var dice = sequence.end;
@@ -173,7 +173,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Remove any if sum is even"),
     // R15: Remove any if sum is odd
     new Operation('R15', 'R', 5, (sequence) => {
       var dice = sequence.end;
@@ -185,7 +185,7 @@ var operations = {
         }
       }
       return next;
-    })
+    }, "Remove any if sum is odd")
   ],
 
   get: [
@@ -197,7 +197,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1));
       }
       return next;
-    }),
+    }, "Get same"),
     // G02: Get turned upside down
     new Operation('G02', 'G', 1, (sequence) => {
       var dice = sequence.end;
@@ -206,7 +206,7 @@ var operations = {
         next.push(new Dice(dice.face1, Math.abs(7 - dice.face1)));
       }
       return next;
-    }),
+    }, "Get turned upside down"),
     // G03: Get +1
     new Operation('G03', 'G', 3, (sequence) => {
       var dice = sequence.end;
@@ -215,7 +215,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 + 1));
       }
       return next;
-    }),
+    }, "Get +1"),
     // G04: Get +2
     new Operation('G04', 'G', 3, (sequence) => {
       var dice = sequence.end;
@@ -224,7 +224,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 + 2));
       }
       return next;
-    }),
+    }, "Get +2"),
     // G05: Get +3
     new Operation('G05', 'G', 2, (sequence) => {
       var dice = sequence.end;
@@ -233,7 +233,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 + 3));
       }
       return next;
-    }),
+    }, "Get +3"),
     // G06: Get x2
     new Operation('G06', 'G', 2, (sequence) => {
       var dice = sequence.end;
@@ -242,7 +242,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 * 2));
       }
       return next;
-    }),
+    }, "Get x2"),
     // G07: Get +1/-1
     new Operation('G07', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -252,7 +252,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 - 1));
       }
       return next;
-    }),
+    }, "Get +1/-1"),
     // G08: Get +2/-2
     new Operation('G08', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -262,7 +262,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 - 2));
       }
       return next;
-    }),
+    }, "Get +2/-2"),
     // G09: Get 4 if odd; 3 if even
     new Operation('G09', 'G', 3, (sequence) => {
       var dice = sequence.end;
@@ -271,7 +271,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 % 2 === 0 ? 3 : 4));
       }
       return next;
-    }),
+    }, "Get 4 if odd; 3 if even"),
     // G10: Get pos
     new Operation('G10', 'G', 0, (sequence) => {
       var dice = sequence.end;
@@ -281,7 +281,7 @@ var operations = {
         next.push(new Dice(dice.face1, pos));
       }
       return next;
-    }),
+    }, "Get #"),
     // G11: Get 1
     new Operation('G11', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -290,7 +290,7 @@ var operations = {
         next.push(new Dice(dice.face1, 1));
       }
       return next;
-    }),
+    }, "Get 1"),
     // G12: Get 3
     new Operation('G12', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -299,7 +299,7 @@ var operations = {
         next.push(new Dice(dice.face1, 3));
       }
       return next;
-    }),
+    }, "Get 3"),
     // G13: Get 5
     new Operation('G13', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -308,7 +308,7 @@ var operations = {
         next.push(new Dice(dice.face1, 5));
       }
       return next;
-    }),
+    }, "Get 5"),
     // G14: Get 2 or 4 or 6
     new Operation('G14', 'G', 10, (sequence) => {
       var dice = sequence.end;
@@ -319,7 +319,7 @@ var operations = {
         next.push(new Dice(dice.face1, 6));
       }
       return next;
-    }),
+    }, "Get even"),
     // G15: Get any
     new Operation('G15', 'G', 20, (sequence) => {
       var dice = sequence.end;
@@ -333,7 +333,7 @@ var operations = {
         next.push(new Dice(dice.face1, 6));
       }
       return next;
-    })
+    }, "Get any")
   ],
 
   change: [
@@ -346,7 +346,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face2 + 2));
       }
       return next;
-    }),
+    }, "Change +2"),
     // C02: A die -1
     new Operation('C02', 'C', 3, (sequence) => {
       var dice = sequence.end;
@@ -356,7 +356,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face2 - 1));
       }
       return next;
-    }),
+    }, "Change -1"),
     // C03: All dice +2
     new Operation('C03', 'C', 2, (sequence) => {
       var dice = sequence.end;
@@ -367,7 +367,7 @@ var operations = {
         next.push(new Dice(dice.face1 + 2, dice.face2 + 2));
       }
       return next;
-    }),
+    }, "Change all +2"),
     // C04: All dice -1
     new Operation('C04', 'C', 2, (sequence) => {
       var dice = sequence.end;
@@ -378,7 +378,7 @@ var operations = {
         next.push(new Dice(dice.face1 - 1, dice.face2 - 1));
       }
       return next;
-    }),
+    }, "Change all -1"),
     // C05: A die turned upside down
     new Operation('C05', 'C', 1, (sequence) => {
       var dice = sequence.end;
@@ -388,7 +388,7 @@ var operations = {
         next.push(new Dice(dice.face1, Math.abs(7 - dice.face2)));
       }
       return next;
-    }),
+    }, "Turn upside down"),
     // C06: All dice turned upside down
     new Operation('C06', 'C', 2, (sequence) => {
       var dice = sequence.end;
@@ -399,7 +399,7 @@ var operations = {
         next.push(new Dice(Math.abs(7 - dice.face1), Math.abs(7 - dice.face2)));
       }
       return next;
-    }),
+    }, "Turn all upside down"),
     // C07: A die to 1
     new Operation('C07', 'C', 10, (sequence) => {
       var dice = sequence.end;
@@ -409,7 +409,7 @@ var operations = {
         next.push(new Dice(dice.face1, 1));
       }
       return next;
-    }),
+    }, "Change to 1"),
     // C08: A die to 3
     new Operation('C08', 'C', 10, (sequence) => {
       var dice = sequence.end;
@@ -419,7 +419,7 @@ var operations = {
         next.push(new Dice(dice.face1, 3));
       }
       return next;
-    }),
+    }, "Change to 3"),
     // C09: A die to 5
     new Operation('C09', 'C', 10, (sequence) => {
       var dice = sequence.end;
@@ -429,7 +429,7 @@ var operations = {
         next.push(new Dice(dice.face1, 5));
       }
       return next;
-    }),
+    }, "Change to 5"),
     // C10: All dice to 2
     new Operation('C10', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -440,7 +440,7 @@ var operations = {
         next.push(new Dice(2, 2));
       }
       return next;
-    }),
+    }, "Change all to 2"),
     // C11: All dice to 4
     new Operation('C11', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -451,7 +451,7 @@ var operations = {
         next.push(new Dice(4, 4));
       }
       return next;
-    }),
+    }, "Change all to 4"),
     // C12: All dice to 6
     new Operation('C12', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -462,7 +462,7 @@ var operations = {
         next.push(new Dice(6, 6));
       }
       return next;
-    }),
+    }, "Change all to 6"),
     // C13: Repeat previous change
     new Operation('C13', 'C', 0, (sequence) => {
       var dice = sequence.end;
@@ -471,7 +471,7 @@ var operations = {
         return op.fn(sequence);
       }
       return [];
-    }),
+    }, "Repeat prev. change"),
     // C14: Allocate +1/+1/+1
     new Operation('C14', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -485,7 +485,7 @@ var operations = {
         }
       }
       return next;
-    }),
+    }, "Allocate +1/+1/+1"),
     // C15: Allocate -1/-1/-1
     new Operation('C15', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -499,7 +499,7 @@ var operations = {
         }
       }
       return next;
-    })
+    }, "Allocate -1/-1/-1")
   ]
 };
 
@@ -704,11 +704,12 @@ var Dice = require('./dice');
 var Transition = require('./transition');
 
 class Operation {
-  constructor(id, type, cost, fn) {
+  constructor(id, type, cost, fn, description) {
     this.id = id;
     this.type = type;
     this.cost = cost;
     this.fn = fn;
+    this.description = description;
   }
 
   transitions(sequence) {

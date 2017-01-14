@@ -2,11 +2,12 @@ var Dice = require('./dice');
 var Transition = require('./transition');
 
 class Operation {
-  constructor(id, type, cost, fn) {
+  constructor(id, type, cost, fn, description) {
     this.id = id;
     this.type = type;
     this.cost = cost;
     this.fn = fn;
+    this.description = description;
   }
 
   transitions(sequence) {

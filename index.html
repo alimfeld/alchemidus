@@ -4,6 +4,7 @@
     <style>
 body {
   font-family: sans-serif;
+  font-size: 150%;
 }
 body, #game {
   height: 100%;
@@ -14,7 +15,6 @@ body, #game {
   flex-direction: column;
 }
 #cards {
-  padding: 5px;
   flex: 1;
   display: flex;
 }
@@ -22,15 +22,18 @@ body, #game {
   flex: 1;
 }
 .card {
+  padding: 5px;
   position: relative;
+  border: 1px solid;
 }
 .step {
+  padding: 5px;
   position: absolute;
-  top: 60%;
+  top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  opacity: 0.5;
+  opacity: 0.8;
   display: flex;
 }
 .remaining2 {
@@ -47,11 +50,9 @@ body, #game {
   flex-direction: column;
 }
 #goal {
-  border-top: solid 2px;
   display: flex;
 }
 #goal div {
-  padding: 5px;
   flex: 1;
 }
 #clay {
@@ -65,20 +66,21 @@ body, #game {
 }
 #actions {
   display: flex;
-  font-size: 120%;
+  font-size: 150%;
   text-align: center;
 }
 #actions div {
   flex: 1;
   cursor: pointer;
-  margin: 2px;
-  padding: 10px 0 10px 0;
+  padding: 30px 0 30px 0;
   background: lightgray;
+  border: 1px solid white;
 }
 .dice {
   display: flex;
 }
 .dice div {
+  padding: 5px 10% 5px 10%;
   flex: 1;
 }
 #svg{
@@ -111,8 +113,9 @@ function newGame() {
   game = new Game();
   var cnt = 1;
   game.operations.forEach(op => {
-    var div = $("<div class='card'></div>");
-    div.append(op.id);
+    var div = $("<div></div>");
+    div.append("<div>" + op.id + " (" + op.cost + ")</div>");
+    div.append("<div>" + op.description + "</div>");
     $("#o" + cnt++).html(div);
   });
   $("#clay").html(svg(game.start));
@@ -126,11 +129,12 @@ function clearSteps() {
   }
 }
 
-function showStep(step, transition, remaining) {
+function showStep(step, transition, cost, remaining) {
   var div = $("<div class='step'></div>");
   div.addClass("remaining" + remaining);
-  var card = game.operations.indexOf(transition.operation) + 1;
-  div.append("<div>" + step + "</div>");
+  var op = transition.operation;
+  var card = game.operations.indexOf(op) + 1;
+  div.append("<div>" + step + " (" + cost + ")</div>");
   div.append(svg(transition.end));
   $("#o" + card).append(div);
 }
@@ -141,7 +145,7 @@ function showSolution() {
   var step = 1;
   game.solution.transitions.forEach(tr => {
     game.addTransition(tr);
-    showStep(step++, tr, game.remainingTargets.length);
+    showStep(step++, tr, game.cost, game.remainingTargets.length);
   });
 }
 
