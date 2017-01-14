@@ -1,6 +1,59 @@
 var Dice = require('./dice');
-var operations= require('./operations');
-var findCheapestSeq = require('./solver');
+var Sequence = require('./sequence');
+var operations = require('./cards');
+
+function solve(sequence, operations, targets, best) {
+
+  if (targets.length === 0) {
+    // found solution
+    return sequence;
+  }
+
+  var solution = best;
+
+  // try all operations
+  operations.forEach((operation) => {
+
+    var cost = sequence.cost + operation.cost;
+    if (solution && solution.cost < cost) {
+      // operation will not produce cheaper solution
+      return;
+    }
+
+    if (solution && solution.cost == cost) {
+      // operation may produce solution with same cost
+      if (solution.length <= sequence.length) {
+        // operation will not produce shorter solution
+        return;
+      }
+    }
+
+    var transitions = operation.transitions(sequence);
+    if (transitions.length === 0) {
+      // operation is not applicable
+      return;
+    }
+
+    var newOperations = operations.slice();
+    newOperations.splice(newOperations.indexOf(operation), 1);
+
+    transitions.forEach((transition) => {
+
+      // update targets
+      var newTargets = targets.slice();
+      if (transition.endsIn(newTargets[0])) {
+        newTargets.shift();
+      }
+
+      var newSequence = sequence.add(transition);
+
+      solution = solve(newSequence, newOperations, newTargets, solution) || solution;
+    });
+
+  });
+
+  return solution;
+}
 
 function randomFace() {
   return Math.floor((Math.random() * 6) + 1);
@@ -43,7 +96,7 @@ function Game() {
   this.ops = ops();
   this.start = start();
   this.targets = targets();
-  this.solution = findCheapestSeq([], 0, this.ops, this.start, this.targets);
+  this.solution = solve(new Sequence(this.start), this.ops, this.targets);
 }
 
 module.exports = Game;
