@@ -4,7 +4,9 @@
   "description": "Alchemidus card puzzle game: Emulator and solver",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "build": "browserify game.js -s 'Game' > bundle.js",
+    "start": "open index.html"
   },
   "keywords": [
     "alchemidus",
@@ -15,6 +17,7 @@
   "author": "aimfeld",
   "license": "ISC",
   "devDependencies": {
-    "mocha": "^3.2.0"
+    "mocha": "3.2.0",
+    "browserify": "13.0.1"
   }
 }

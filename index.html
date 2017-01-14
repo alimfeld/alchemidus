@@ -1,0 +1,217 @@
+<html>
+  <head>
+    <style>
+body, #game {
+  height: 100%;
+  margin: 0;
+}
+#game {
+  display: flex;
+  flex-direction: column;
+}
+#cards {
+  padding: 5px;
+  flex: 1;
+  display: flex;
+}
+#cards div {
+  flex: 1;
+}
+.card {
+  position: relative;
+}
+.step {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  width: 60%;
+  background: lightgray;
+  opacity: 0.5;
+  display: flex;
+}
+#remove, #get, #change {
+  display: flex;
+  flex-direction: column;
+}
+#goal {
+  border-top: solid 2px;
+  padding: 5px;
+  display: flex;
+}
+#goal div {
+  padding: 5px;
+  flex: 1;
+}
+#clay {
+  background: orange;
+}
+#iron {
+  background: gray;
+}
+#gold {
+  background: gold;
+}
+.dice {
+  display: flex;
+}
+.dice div {
+  flex: 1;
+}
+#svg{
+  display: none;
+}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+            crossorigin="anonymous">
+    </script>
+    <script src="bundle.js"></script>
+    <script>
+var game;
+
+function svg(dice) {
+  var div = $("<div class='dice'></div>");
+  var face1 = $("<div class='face1'></div>");
+  face1.append($('#d' + dice.face1).clone());
+  div.append(face1);
+  var face2 = $("<div class='face2'></div>");
+  div.append(face2);
+  if (dice.areTwo()) {
+    face2.append($('#d' + dice.face2).clone());
+  }
+  return div;
+}
+
+function newGame() {
+  clearSteps();
+  game = new Game();
+  var cnt = 1;
+  game.ops.forEach(op => {
+    var div = $("<div class='card'></div>");
+    div.append(op.id);
+    $("#o" + cnt++).html(div);
+  });
+  $("#clay").html(svg(game.start));
+  $("#iron").html(svg(game.targets[0]));
+  $("#gold").html(svg(game.targets[1]));
+}
+
+function clearSteps() {
+  for (var i = 1; i <= 15; i++) {
+    $("#o" + i + " .step").remove();
+  }
+}
+
+function showStep(step, transition) {
+  var div = $("<div class='step'></div>");
+  var card = game.ops.indexOf(transition.operation) + 1;
+  div.append("<div>" + step + "</div>");
+  div.append(svg(transition.end));
+  $("#o" + card).append(div);
+}
+
+function showSolution() {
+  clearSteps();
+  var step = 1;
+  game.solution.transitions.forEach(tr => {
+    showStep(step++, tr);
+  });
+}
+
+$(document).ready(function() {
+  newGame();
+  $("#new").click(function() {
+    newGame();
+  });
+  $("#solve").click(function() {
+    showSolution();
+  });
+});
+    </script>
+  </head>
+
+  <body>
+    <div id="game">
+      <div id="cards">
+        <div id="remove">
+          <div id="o1" class="card"></div>
+          <div id="o2" class="card"></div>
+          <div id="o3" class="card"></div>
+          <div id="o4" class="card"></div>
+          <div id="o5" class="card"></div>
+        </div>
+        <div id="get">
+          <div id="o6" class="card"></div>
+          <div id="o7" class="card"></div>
+          <div id="o8" class="card"></div>
+          <div id="o9" class="card"></div>
+          <div id="o10" class="card"></div>
+        </div>
+        <div id="change">
+          <div id="o11" class="card"></div>
+          <div id="o12" class="card"></div>
+          <div id="o13" class="card"></div>
+          <div id="o14" class="card"></div>
+          <div id="o15" class="card"></div>
+        </div>
+      </div>
+      <div id="goal">
+        <div id="clay"></div>
+        <div id="iron"></div>
+        <div id="gold"></div>
+      </div>
+      <div id="actions">
+        <button id="new">New Game</button>
+        <button id="solve">Show Solution</button>
+      </div>
+    </div>
+
+    <div id="svg">
+      <svg id="d1" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="5" cy="5" r="1" />
+      </svg>
+      <svg id="d2" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="3" cy="3" r="1" />
+        <circle cx="7" cy="7" r="1" />
+      </svg>
+      <svg id="d3" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="3" cy="3" r="1" />
+        <circle cx="5" cy="5" r="1" />
+        <circle cx="7" cy="7" r="1" />
+      </svg>
+      <svg id="d4" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="3" cy="3" r="1" />
+        <circle cx="7" cy="3" r="1" />
+        <circle cx="3" cy="7" r="1" />
+        <circle cx="7" cy="7" r="1" />
+      </svg>
+      <svg id="d5" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="3" cy="3" r="1" />
+        <circle cx="7" cy="3" r="1" />
+        <circle cx="5" cy="5" r="1" />
+        <circle cx="3" cy="7" r="1" />
+        <circle cx="7" cy="7" r="1" />
+      </svg>
+      <svg id="d6" viewBox="0 0 10 10">
+        <rect width="10" height="10" fill="#000" rx="1" />
+        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
+        <circle cx="3" cy="3" r="1" />
+        <circle cx="7" cy="3" r="1" />
+        <circle cx="3" cy="5" r="1" />
+        <circle cx="7" cy="5" r="1" />
+        <circle cx="3" cy="7" r="1" />
+        <circle cx="7" cy="7" r="1" />
+      </svg>
+    </div>
+  </body>
+</html>
