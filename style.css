@@ -81,7 +81,7 @@ body {
 .button {
   text-align: center;
   cursor: pointer;
-  padding: 5px;
+  padding: 8px;
   background: ghostwhite;
   border: 1px solid gray;
 }
@@ -162,5 +162,5 @@ body {
 .dice {
 }
 .die {
-  font-size: 150%;
+  font-size: 140%;
 }
