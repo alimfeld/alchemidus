@@ -9,11 +9,21 @@ body, #game {
 #cards {
   flex: 1;
   display: flex;
+  flex-direction: row;
 }
-#cards .column {
+#cards .category {
   flex : 1;
   display: flex;
-  flex-direction: column;
+}
+@media all and (orientation:portrait) {
+  #cards .category {
+    flex-direction: column;
+  }
+}
+@media all and (orientation:landscape) {
+  #cards {
+    flex-direction: column;
+  }
 }
 #cards .card {
   flex: 1;
