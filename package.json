@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "build": "browserify game.js -s 'Game' > bundle.js",
+    "build": "browserify lib/game.js -s 'Game' > bundle.js",
     "start": "open index.html"
   },
   "keywords": [

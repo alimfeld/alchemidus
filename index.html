@@ -1,92 +1,7 @@
 <html>
   <head>
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <style>
-body {
-  font-family: sans-serif;
-  font-size: 150%;
-}
-body, #game {
-  height: 100%;
-  margin: 0;
-}
-#game {
-  display: flex;
-  flex-direction: column;
-}
-#cards {
-  flex: 1;
-  display: flex;
-}
-#cards div {
-  flex: 1;
-}
-.card {
-  padding: 5px;
-  position: relative;
-  border: 1px solid;
-}
-.step {
-  padding: 5px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  opacity: 0.8;
-  display: flex;
-}
-.remaining2 {
-  background: brown;
-}
-.remaining1 {
-  background: gray;
-}
-.remaining0 {
-  background: gold;
-}
-#remove, #get, #change {
-  display: flex;
-  flex-direction: column;
-}
-#goal {
-  display: flex;
-}
-#goal div {
-  flex: 1;
-}
-#clay {
-  background: brown;
-}
-#iron {
-  background: gray;
-}
-#gold {
-  background: gold;
-}
-#actions {
-  display: flex;
-  font-size: 150%;
-  text-align: center;
-}
-#actions div {
-  flex: 1;
-  cursor: pointer;
-  padding: 30px 0 30px 0;
-  background: lightgray;
-  border: 1px solid white;
-}
-.dice {
-  display: flex;
-}
-.dice div {
-  padding: 5px 10% 5px 10%;
-  flex: 1;
-}
-#svg{
-  display: none;
-}
-    </style>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
             crossorigin="anonymous">
@@ -95,15 +10,20 @@ body, #game {
     <script>
 var game;
 
+function icon(id) {
+  return "<svg><use xmlns:xlink='http://www.w3.org/1999/xlink' xlink:href='icons.xml#" + id + "'/></svg>";
+}
+
 function svg(dice) {
   var div = $("<div class='dice'></div>");
   var face1 = $("<div class='face1'></div>");
-  face1.append($('#d' + dice.face1).clone());
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  face1.append(icon("d" + dice.face1));
   div.append(face1);
   var face2 = $("<div class='face2'></div>");
   div.append(face2);
   if (dice.areTwo()) {
-    face2.append($('#d' + dice.face2).clone());
+    face2.append(icon("d" + dice.face2));
   }
   return div;
 }
@@ -113,10 +33,18 @@ function newGame() {
   game = new Game();
   var cnt = 1;
   game.operations.forEach(op => {
-    var div = $("<div></div>");
-    div.append("<div>" + op.id + " (" + op.cost + ")</div>");
-    div.append("<div>" + op.description + "</div>");
-    $("#o" + cnt++).html(div);
+    var div = $("<div class='layout'></div>");
+    var header = $("<div class='header'></div>");
+    var main = $("<div class='main'></div>");
+    var footer = $("<div class='footer'></div>");
+    header.append("<div class='cost'>" + op.cost + "</div>");
+    header.append("<div class='type'>" + op.type + "</div>");
+    header.append("<div class='id'>" + op.id + "</div>");
+    main.append("<div>" + op.description + "</div>");
+    div.append(header);
+    div.append(main);
+    div.append(footer);
+    $("#c" + cnt++).html(div);
   });
   $("#clay").html(svg(game.start));
   $("#iron").html(svg(game.targets[0]));
@@ -125,18 +53,20 @@ function newGame() {
 
 function clearSteps() {
   for (var i = 1; i <= 15; i++) {
-    $("#o" + i + " .step").remove();
+    $("#c" + i + " .footer").empty();
   }
 }
 
 function showStep(step, transition, cost, remaining) {
-  var div = $("<div class='step'></div>");
-  div.addClass("remaining" + remaining);
   var op = transition.operation;
   var card = game.operations.indexOf(op) + 1;
-  div.append("<div>" + step + " (" + cost + ")</div>");
-  div.append(svg(transition.end));
-  $("#o" + card).append(div);
+  var footer = $("#c" + card + " .footer");
+  footer.append("<div class='cost'>" + cost + "</div>");
+  footer.append("<div class='step'>" + step + "</div>");
+  var state = $("<div class='state'></div>");
+  state.addClass("remaining" + remaining);
+  state.append(svg(transition.end));
+  footer.append(state);
 }
 
 function showSolution() {
@@ -172,26 +102,26 @@ $(document).ready(function() {
   <body>
     <div id="game">
       <div id="cards">
-        <div id="remove">
-          <div id="o1" class="card"></div>
-          <div id="o2" class="card"></div>
-          <div id="o3" class="card"></div>
-          <div id="o4" class="card"></div>
-          <div id="o5" class="card"></div>
+        <div id="remove" class="column">
+          <div id="c1" class="card"></div>
+          <div id="c2" class="card"></div>
+          <div id="c3" class="card"></div>
+          <div id="c4" class="card"></div>
+          <div id="c5" class="card"></div>
         </div>
-        <div id="get">
-          <div id="o6" class="card"></div>
-          <div id="o7" class="card"></div>
-          <div id="o8" class="card"></div>
-          <div id="o9" class="card"></div>
-          <div id="o10" class="card"></div>
+        <div id="get" class="column">
+          <div id="c6" class="card"></div>
+          <div id="c7" class="card"></div>
+          <div id="c8" class="card"></div>
+          <div id="c9" class="card"></div>
+          <div id="c10" class="card"></div>
         </div>
-        <div id="change">
-          <div id="o11" class="card"></div>
-          <div id="o12" class="card"></div>
-          <div id="o13" class="card"></div>
-          <div id="o14" class="card"></div>
-          <div id="o15" class="card"></div>
+        <div id="change" class="column">
+          <div id="c11" class="card"></div>
+          <div id="c12" class="card"></div>
+          <div id="c13" class="card"></div>
+          <div id="c14" class="card"></div>
+          <div id="c15" class="card"></div>
         </div>
       </div>
       <div id="goal">
@@ -200,58 +130,10 @@ $(document).ready(function() {
         <div id="gold"></div>
       </div>
       <div id="actions">
-        <div id="new">New Game</div>
-        <div id="solve">Show Solution</div>
-        <div id="reset">Reset Game</div>
+        <div id="new" class="button">New Game</div>
+        <div id="solve" class="button">Show Solution</div>
+        <div id="reset" class="button">Reset Game</div>
       </div>
-    </div>
-
-    <div id="svg">
-      <svg id="d1" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="5" cy="5" r="1" />
-      </svg>
-      <svg id="d2" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="3" cy="3" r="1" />
-        <circle cx="7" cy="7" r="1" />
-      </svg>
-      <svg id="d3" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="3" cy="3" r="1" />
-        <circle cx="5" cy="5" r="1" />
-        <circle cx="7" cy="7" r="1" />
-      </svg>
-      <svg id="d4" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="3" cy="3" r="1" />
-        <circle cx="7" cy="3" r="1" />
-        <circle cx="3" cy="7" r="1" />
-        <circle cx="7" cy="7" r="1" />
-      </svg>
-      <svg id="d5" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="3" cy="3" r="1" />
-        <circle cx="7" cy="3" r="1" />
-        <circle cx="5" cy="5" r="1" />
-        <circle cx="3" cy="7" r="1" />
-        <circle cx="7" cy="7" r="1" />
-      </svg>
-      <svg id="d6" viewBox="0 0 10 10">
-        <rect width="10" height="10" fill="#000" rx="1" />
-        <rect width="8" height="8" fill="#FFF" x="1" y="1" />
-        <circle cx="3" cy="3" r="1" />
-        <circle cx="7" cy="3" r="1" />
-        <circle cx="3" cy="5" r="1" />
-        <circle cx="7" cy="5" r="1" />
-        <circle cx="3" cy="7" r="1" />
-        <circle cx="7" cy="7" r="1" />
-      </svg>
     </div>
   </body>
 </html>

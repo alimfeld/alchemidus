@@ -1,7 +1,7 @@
-var Dice = require('../dice');
-var Operation  = require('../operation');
-var Transition  = require('../transition');
-var Sequence = require('../sequence');
+var Dice = require('../lib/dice');
+var Operation  = require('../lib/operation');
+var Transition  = require('../lib/transition');
+var Sequence = require('../lib/sequence');
 var assert = require('assert');
 
 function d(face1, face2) {

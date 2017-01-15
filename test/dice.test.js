@@ -1,5 +1,5 @@
 var assert = require('assert');
-var Dice = require('../dice');
+var Dice = require('../lib/dice');
 
 describe('Dice', function() {
   describe('constructor', function() {

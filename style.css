@@ -1,0 +1,129 @@
+body, #game {
+  height: 100%;
+  margin: 0;
+}
+#game {
+  display: flex;
+  flex-direction: column;
+}
+#cards {
+  flex: 1;
+  display: flex;
+}
+#cards .column {
+  flex : 1;
+  display: flex;
+  flex-direction: column;
+}
+#cards .card {
+  flex: 1;
+  display: flex;
+}
+.layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.layout .header {
+  flex: 1;
+  display: flex;
+}
+.layout .header div {
+  flex: 1;
+}
+.layout .main {
+  flex: 2;
+}
+.layout .footer {
+  flex: 1;
+  display: flex;
+}
+.layout .footer div {
+  flex: 1;
+}
+#goal {
+  display: flex;
+}
+#goal div {
+  flex: 1;
+}
+#actions {
+  display: flex;
+}
+#actions div {
+  flex: 1;
+}
+.dice {
+  display: flex;
+}
+.dice div {
+  flex: 1;
+}
+.face1, .face2 {
+  position: relative;
+  height: 0;
+  width: 100%;
+}
+svg {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  left: 0;
+  top: 0;
+}
+body {
+  font-family: sans-serif;
+  font-size: 150%;
+}
+.card {
+  margin: 2px;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 5px;
+}
+.button {
+  text-align: center;
+  cursor: pointer;
+  padding: 30px 0 30px 0;
+  background: lightgray;
+  border: 1px solid white;
+}
+.id {
+  font-size: smaller;
+}
+.cost {
+  font-weight: bold;
+}
+.step:before {
+  content: "#";
+}
+.state {
+  padding: 1px;
+  border: 1px solid;
+  border-radius: 5px;
+}
+.remaining2 {
+  background: brown;
+}
+.remaining1 {
+  background: gray;
+}
+.remaining0 {
+  background: gold;
+}
+#clay {
+  background: brown;
+}
+#iron {
+  background: gray;
+}
+#gold {
+  background: gold;
+}
+#goal > div {
+  padding: 5px;
+  font-size: 200%;
+}
+.dice div {
+  padding: 1ex;
+}

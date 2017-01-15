@@ -1,8 +1,8 @@
 var assert = require('assert');
-var Dice = require('../dice');
-var Transition = require('../transition');
-var Sequence = require('../sequence');
-var operations = require('../cards');
+var Dice = require('../lib/dice');
+var Transition = require('../lib/transition');
+var Sequence = require('../lib/sequence');
+var operations = require('../lib/cards');
 
 function d(face1, face2) {
   return new Dice(face1 || 3, face2);
