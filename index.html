@@ -2,6 +2,7 @@
   <head>
     <title>Alchemidus</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"
             integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
@@ -40,7 +41,9 @@ function newGame() {
     }
     header.append("<div class='type'>" + type + "</div>");
     header.append("<div class='id'>" + op.id + "</div>");
-    main.append("<div>" + op.description + "</div>");
+    var description = op.description;
+    description = description.replace(/(&#x268.;)/g, "<span class='die'>$1</span>");
+    main.append("<div>" + description + "</div>");
     div.append(header);
     div.append(main);
     div.append(footer);
@@ -61,8 +64,8 @@ function showStep(step, transition, cost, remaining) {
   var op = transition.operation;
   var card = game.operations.indexOf(op) + 1;
   var footer = $("#c" + card + " .footer");
-  footer.append("<div class='cost'>" + cost + "</div>");
   footer.append("<div class='step'>" + step + "</div>");
+  footer.append("<div class='cost'>" + cost + "</div>");
   var state = $("<div class='state'></div>");
   state.addClass("remaining" + remaining);
   state.append(dice(transition.end));

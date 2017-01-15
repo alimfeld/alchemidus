@@ -252,7 +252,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 - 1));
       }
       return next;
-    }, "+1/-1"),
+    }, "+1 / -1"),
     // G08: Get +2/-2
     new Operation('G08', 'G', 5, (sequence) => {
       var dice = sequence.end;
@@ -262,7 +262,7 @@ var operations = {
         next.push(new Dice(dice.face1, dice.face1 - 2));
       }
       return next;
-    }, "+2/-2"),
+    }, "+2 / -2"),
     // G09: Get 4 if odd; 3 if even
     new Operation('G09', 'G', 3, (sequence) => {
       var dice = sequence.end;
@@ -367,7 +367,7 @@ var operations = {
         next.push(new Dice(dice.face1 + 2, dice.face2 + 2));
       }
       return next;
-    }, "+2 . +2"),
+    }, "all +2"),
     // C04: All dice -1
     new Operation('C04', 'C', 2, (sequence) => {
       var dice = sequence.end;
@@ -378,7 +378,7 @@ var operations = {
         next.push(new Dice(dice.face1 - 1, dice.face2 - 1));
       }
       return next;
-    }, "-1 . -1"),
+    }, "all -1"),
     // C05: A die turned upside down
     new Operation('C05', 'C', 1, (sequence) => {
       var dice = sequence.end;
@@ -399,7 +399,7 @@ var operations = {
         next.push(new Dice(Math.abs(7 - dice.face1), Math.abs(7 - dice.face2)));
       }
       return next;
-    }, "&#x21c5; . &#x21c5;"),
+    }, "all &#x21c5;"),
     // C07: A die to 1
     new Operation('C07', 'C', 10, (sequence) => {
       var dice = sequence.end;
@@ -440,7 +440,7 @@ var operations = {
         next.push(new Dice(2, 2));
       }
       return next;
-    }, "&#x2681; . &#x2681;"),
+    }, "all &#x2681;"),
     // C11: All dice to 4
     new Operation('C11', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -451,7 +451,7 @@ var operations = {
         next.push(new Dice(4, 4));
       }
       return next;
-    }, "&#x2683; . &#x2683;"),
+    }, "all &#x2683;"),
     // C12: All dice to 6
     new Operation('C12', 'C', 5, (sequence) => {
       var dice = sequence.end;
@@ -462,7 +462,7 @@ var operations = {
         next.push(new Dice(6, 6));
       }
       return next;
-    }, "&#x2685; . &#x2685;"),
+    }, "all &#x2685;"),
     // C13: Repeat previous change
     new Operation('C13', 'C', 0, (sequence) => {
       var dice = sequence.end;
