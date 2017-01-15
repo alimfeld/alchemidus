@@ -37,16 +37,21 @@ body, #game {
 .layout .header {
   flex: 1;
   display: flex;
+  align-items: center;
 }
 .layout .header div {
   flex: 1;
 }
 .layout .main {
   flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .layout .footer {
   flex: 1;
   display: flex;
+  align-items: center;
 }
 .layout .footer div {
   flex: 1;
@@ -63,39 +68,22 @@ body, #game {
 #actions div {
   flex: 1;
 }
-.dice {
-  display: flex;
-}
-.dice div {
-  flex: 1;
-}
-.face1, .face2 {
-  position: relative;
-  height: 0;
-  width: 100%;
-}
-svg {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  left: 0;
-  top: 0;
-}
 body {
   font-family: sans-serif;
-  font-size: 150%;
+  font-size: 120%;
 }
 .card {
   margin: 2px;
   padding: 5px;
   border: 1px solid;
   border-radius: 5px;
+  text-align: center;
 }
 .button {
   text-align: center;
   cursor: pointer;
   padding: 30px 0 30px 0;
-  background: lightgray;
+  background: tan;
   border: 1px solid white;
 }
 .id {
@@ -104,36 +92,56 @@ body {
 .cost {
   font-weight: bold;
 }
+.main {
+  font-size: 150%;
+}
 .step:before {
   content: "#";
 }
 .state {
-  padding: 1px;
   border: 1px solid;
   border-radius: 5px;
+  font-size: 150%;
+}
+#remove .card {
+  background: lightblue;
+}
+#remove .main {
+  background: lightcyan;
+}
+#get .card {
+  background: lightsalmon;
+}
+#get .main {
+  background: bisque;
+}
+#change .card {
+  background: khaki;
+}
+#change .main {
+  background: cornsilk;
 }
 .remaining2 {
-  background: brown;
+  background: sandybrown;
 }
 .remaining1 {
-  background: gray;
+  background: lightgray;
 }
 .remaining0 {
   background: gold;
 }
 #clay {
-  background: brown;
+  background: sandybrown;
 }
 #iron {
-  background: gray;
+  background: lightgray;
 }
 #gold {
   background: gold;
 }
 #goal > div {
-  padding: 5px;
-  font-size: 200%;
+  font-size: 300%;
+  text-align: center;
 }
-.dice div {
-  padding: 1ex;
+.dice {
 }
