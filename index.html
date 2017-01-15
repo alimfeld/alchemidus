@@ -32,7 +32,13 @@ function newGame() {
     var main = $("<div class='main'></div>");
     var footer = $("<div class='footer'></div>");
     header.append("<div class='cost'>" + op.cost + "</div>");
-    header.append("<div class='type'>" + op.type + "</div>");
+    var type;
+    switch(op.type) {
+      case 'R': type = 'Remove'; break;
+      case 'G': type = 'Get'; break;
+      case 'C': type = 'Change'; break;
+    }
+    header.append("<div class='type'>" + type + "</div>");
     header.append("<div class='id'>" + op.id + "</div>");
     main.append("<div>" + op.description + "</div>");
     div.append(header);
