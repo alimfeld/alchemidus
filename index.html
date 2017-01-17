@@ -55,7 +55,7 @@ function newGame() {
     div.append(main);
     div.append(footer);
     div.click((e) => {
-      if (!overlay && !game.solved) {
+      if (!overlay && !game.solved && game.isOperationAvailable(op)) {
         e.stopPropagation();
         applyOperation(op);
       }

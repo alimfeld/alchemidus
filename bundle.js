@@ -679,6 +679,10 @@ class Game {
     this.cost = 0;
   }
 
+  isOperationAvailable(operation) {
+    return this.availableOperations.indexOf(operation) >= 0;
+  }
+
   addTransition(transition) {
     var index = this.availableOperations.indexOf(transition.operation);
     if (index < 0) {
@@ -694,6 +698,7 @@ class Game {
     this.solved = this.remainingTargets.length === 0;
     this.sequence = this.sequence.add(transition);
     this.cost = this.sequence.cost;
+    return true;
   }
 }
 
