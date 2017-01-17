@@ -66,6 +66,14 @@ body, #game {
 .layout .footer div {
   flex: 1;
 }
+#transitions {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  width: 40%;
+  margin: 0 0 0 -20%;
+  text-align: center;
+}
 #goal {
   display: flex;
 }
@@ -150,6 +158,20 @@ body {
 }
 .remaining0 {
   background: gold;
+}
+#transitions {
+  background: antiquewhite;
+  border: 1px solid;
+  border-radius: 5px;
+}
+.entry {
+  padding: 8px;
+  cursor: pointer;
+  font-size: 2em;
+  border-bottom: 1px dotted;
+}
+.entry:last-child {
+  border-bottom: 0;
 }
 #clay, #iron, #gold {
   border: 1px solid;

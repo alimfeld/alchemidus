@@ -17,9 +17,9 @@
     </script>
     <script src="bundle.js"></script>
     <script>
-var game;
+var overlay;
 
-function dice(dice) {
+function renderDice(dice) {
   var content;
   var span = $("<span class='dice'></div>");
   content = "&#" + (9855 + dice.face1) + ";";
@@ -31,7 +31,7 @@ function dice(dice) {
 }
 
 function newGame() {
-  clearSteps();
+  clearTransitions();
   game = new Game();
   var cnt = 1;
   game.operations.forEach(op => {
@@ -54,48 +54,86 @@ function newGame() {
     div.append(header);
     div.append(main);
     div.append(footer);
+    div.click((e) => {
+      if (!overlay && !game.solved) {
+        e.stopPropagation();
+        applyOperation(op);
+      }
+    });
     $("#c" + cnt++).html(div);
   });
-  $("#clay").html(dice(game.start));
-  $("#iron").html(dice(game.targets[0]));
-  $("#gold").html(dice(game.targets[1]));
+  $("#clay").html(renderDice(game.start));
+  $("#iron").html(renderDice(game.targets[0]));
+  $("#gold").html(renderDice(game.targets[1]));
 }
 
-function clearSteps() {
+function clearTransitions() {
   for (var i = 1; i <= 15; i++) {
     $("#c" + i + " .footer").empty();
   }
 }
 
-function showStep(step, transition, cost, remaining) {
-  var op = transition.operation;
-  var card = game.operations.indexOf(op) + 1;
+function applyOperation(op) {
+  var transitions = op.transitions(game.sequence);
+  if (transitions.length === 0) {
+    return;
+  }
+  if (transitions.length === 1) {
+    game.addTransition(transitions[0]);
+    showLastTransition();
+    return;
+  }
+  overlay = $("<div id='transitions'></div>");
+  transitions.forEach(tr => {
+    var entry = $("<div class='entry'></div>");
+    entry.html(renderDice(tr.end));
+    entry.click(() => {
+      game.addTransition(tr);
+      overlay.remove();
+      overlay = undefined;
+      showLastTransition();
+    });
+    overlay.append(entry);
+  });
+  $("#game").append(overlay);
+}
+
+function showLastTransition() {
+  var transition = game.sequence.lastTransition();
+  var card = game.operations.indexOf(transition.operation) + 1;
   var footer = $("#c" + card + " .footer");
-  footer.append("<div class='step'>" + step + "</div>");
-  footer.append("<div class='cost'>" + cost + "</div>");
+  footer.append("<div class='step'>" + game.sequence.length + "</div>");
+  footer.append("<div class='cost'>" + game.cost + "</div>");
   var state = $("<div class='state'></div>");
-  state.addClass("remaining" + remaining);
-  state.append(dice(transition.end));
+  state.addClass("remaining" + game.remainingTargets.length);
+  state.append(renderDice(transition.end));
   footer.append(state);
 }
 
 function showSolution() {
-  clearSteps();
+  clearTransitions();
   game.reset();
-  var step = 1;
   game.solution.transitions.forEach(tr => {
     game.addTransition(tr);
-    showStep(step++, tr, game.cost, game.remainingTargets.length);
+    showLastTransition();
   });
 }
 
 function resetGame() {
-  clearSteps();
+  clearTransitions();
   game.reset();
 }
 
 $(document).ready(function() {
-  newGame();
+  if (!(game instanceof Game)) {
+    newGame();
+  }
+  $("#game").click(() => {
+    if (overlay) {
+      overlay.remove();
+      overlay = undefined;
+    }
+  });
   $("#new").click(function() {
     newGame();
   });
@@ -140,9 +178,9 @@ $(document).ready(function() {
         <div id="gold"></div>
       </div>
       <div id="actions">
-        <div id="new" class="button">New Game</div>
-        <div id="solve" class="button">Show Solution</div>
-        <div id="reset" class="button">Reset Game</div>
+        <div id="new" class="button">New</div>
+        <div id="solve" class="button">Solve</div>
+        <div id="reset" class="button">Reset</div>
       </div>
     </div>
   </body>

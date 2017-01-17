@@ -734,6 +734,10 @@ class Sequence {
     return new Sequence(this.start, this.transitions.concat(transition));
   }
 
+  lastTransition() {
+    return this.length ? this.transitions[this.length - 1] : undefined;
+  }
+
   lastOperation() {
     return this.length ? this.transitions[this.length - 1].operation : undefined;
   }
