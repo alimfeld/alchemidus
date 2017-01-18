@@ -118,14 +118,14 @@ body {
 .cost:before {
   content: "\2605";
 }
-.optimal {
-  text-decoration: underline;
+.optimal:after {
+  content: "\1f44d"
 }
 .main {
   font-size: 1.1em;
 }
 .step {
-  margin: 0 8px 0 8px;
+  margin: 0 4px;
   border: solid 1px;
   border-radius: 50%;
   background: white;
