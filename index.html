@@ -17,6 +17,7 @@
     </script>
     <script src="bundle.js"></script>
     <script>
+var game;
 var overlay;
 
 function renderDice(dice) {
@@ -73,6 +74,28 @@ function clearTransitions() {
   }
 }
 
+function showOverlay(transitions) {
+  overlay = $("<div id='transitions'></div>");
+  transitions.forEach(tr => {
+    var entry = $("<div class='entry'></div>");
+    entry.html(renderDice(tr.end));
+    entry.click(() => {
+      game.addTransition(tr);
+      showLastTransition();
+      hideOverlay();
+    });
+    overlay.append(entry);
+  });
+  $("#game").append(overlay);
+}
+
+function hideOverlay() {
+  if (overlay) {
+    overlay.remove();
+    overlay = undefined;
+  }
+}
+
 function applyOperation(op) {
   var transitions = op.transitions(game.sequence);
   if (transitions.length === 0) {
@@ -83,19 +106,7 @@ function applyOperation(op) {
     showLastTransition();
     return;
   }
-  overlay = $("<div id='transitions'></div>");
-  transitions.forEach(tr => {
-    var entry = $("<div class='entry'></div>");
-    entry.html(renderDice(tr.end));
-    entry.click(() => {
-      game.addTransition(tr);
-      overlay.remove();
-      overlay = undefined;
-      showLastTransition();
-    });
-    overlay.append(entry);
-  });
-  $("#game").append(overlay);
+  showOverlay(transitions);
 }
 
 function showLastTransition() {
@@ -103,7 +114,11 @@ function showLastTransition() {
   var card = game.operations.indexOf(transition.operation) + 1;
   var footer = $("#c" + card + " .footer");
   footer.append("<div class='step'>" + game.sequence.length + "</div>");
-  footer.append("<div class='cost'>" + game.cost + "</div>");
+  var cost = $("<div class='cost'>" + game.cost + "</div>");
+  if (game.solved && game.solution.cost == game.cost) {
+    cost.addClass("optimal");
+  }
+  footer.append(cost);
   var state = $("<div class='state'></div>");
   state.addClass("remaining" + game.remainingTargets.length);
   state.append(renderDice(transition.end));
@@ -125,14 +140,9 @@ function resetGame() {
 }
 
 $(document).ready(function() {
-  if (!(game instanceof Game)) {
-    newGame();
-  }
+  newGame();
   $("#game").click(() => {
-    if (overlay) {
-      overlay.remove();
-      overlay = undefined;
-    }
+    hideOverlay();
   });
   $("#new").click(function() {
     newGame();

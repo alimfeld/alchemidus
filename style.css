@@ -68,7 +68,7 @@ body, #game {
 }
 #transitions {
   position: absolute;
-  top: 40%;
+  top: 30%;
   left: 50%;
   width: 40%;
   margin: 0 0 0 -20%;
@@ -117,6 +117,9 @@ body {
 }
 .cost:before {
   content: "\2605";
+}
+.optimal {
+  text-decoration: underline;
 }
 .main {
   font-size: 1.1em;
