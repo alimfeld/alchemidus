@@ -119,7 +119,7 @@ body {
   content: "\2605";
 }
 .optimal:after {
-  content: " \1f44d"
+  content: "\1f44d"
 }
 .main {
   font-size: 1.1em;
