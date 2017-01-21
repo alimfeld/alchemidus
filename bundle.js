@@ -654,19 +654,20 @@ function ops() {
     concat(shuffle(operations.change.slice()).slice(0, 5));
 }
 
-function start() {
-  return new Dice(randomFace(), randomFace());
-}
-
-function targets() {
-  return [new Dice(randomFace()), new Dice(randomFace(), randomFace())];
+function process(startWithTwo) {
+  if (startWithTwo) {
+    return [new Dice(randomFace(), randomFace()), new Dice(randomFace()), new Dice(randomFace(), randomFace())];
+  } else {
+    return [new Dice(randomFace()), new Dice(randomFace(), randomFace()), new Dice(randomFace())];
+  }
 }
 
 class Game {
-  constructor() {
+  constructor(startWithTwo = true) {
     this.operations = ops();
-    this.start = start();
-    this.targets = targets();
+    var proc = process(startWithTwo);
+    this.start = proc.shift();
+    this.targets = proc;
     this.solution = solve(new Sequence(this.start), this.operations, this.targets);
     this.reset();
   }

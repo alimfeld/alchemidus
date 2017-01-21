@@ -33,7 +33,7 @@ function renderDice(dice) {
 
 function newGame() {
   clearTransitions();
-  game = new Game();
+  game = new Game(game ? game.start.isOne() : true);
   var cnt = 1;
   game.operations.forEach(op => {
     var div = $("<div class='layout'></div>");
@@ -113,12 +113,13 @@ function showLastTransition() {
   var transition = game.sequence.lastTransition();
   var card = game.operations.indexOf(transition.operation) + 1;
   var footer = $("#c" + card + " .footer");
-  footer.append("<div class='step'>" + game.sequence.length + "</div>");
+  var step = $("<div class='step'>&#93" + (11 + game.sequence.length) + ";</div>");
+  footer.append(step);
   var cost = $("<div class='cost'>" + game.cost + "</div>");
-  if (game.solved && game.solution.cost == game.cost) {
-    cost.addClass("optimal");
-  }
   footer.append(cost);
+  if (game.solved && game.solution.cost == game.cost) {
+    step.addClass("optimal");
+  }
   var state = $("<div class='state'></div>");
   state.addClass("remaining" + game.remainingTargets.length);
   state.append(renderDice(transition.end));
