@@ -19,143 +19,219 @@
     <script src="bundle.js"></script>
     <script>
 var game;
-var overlay;
 
-function renderDice(dice) {
-  var content;
-  var span = $("<span class='dice'></div>");
-  content = "&#" + (9855 + dice.face1) + ";";
-  if (dice.areTwo()) {
-    content += "&#" + (9855 + dice.face2) + ";";
+var $overlay;
+var $game;
+var $cards;
+// goals
+var $clay;
+var $iron;
+var $gold;
+// actions
+var $new;
+var $solve;
+var $reset;
+var $back;
+
+$(document).ready(function() {
+  initControls();
+  registerHandlers();
+  newGame();
+});
+
+function initControls() {
+  $game = $("#game");
+  $cards = [];
+  for (var i = 0; i < 15; i++) {
+    $cards.push($("#c" + (i+1)));
   }
-  span.append(content);
-  return span;
+  $clay = $("#clay");
+  $iron = $("#iron");
+  $gold = $("#gold");
+  $new = $("#new");
+  $solve = $("#solve");
+  $reset = $("#reset");
+  $back = $("#back");
+}
+
+function registerHandlers() {
+  $game.click(() => {
+    hideOverlay();
+  });
+  $new.click(function() {
+    newGame();
+  });
+  $solve.click(function() {
+    showSolution();
+  });
+  $reset.click(function() {
+    resetGame();
+  });
+  $back.click(function() {
+    goBack();
+  });
+  $cards.forEach(($card, index) => {
+    $card.click(event => {
+      var operation = game.operations[index];
+      if (!$overlay && !game.solved && game.isOperationAvailable(operation)) {
+        event.stopPropagation();
+        applyOperation(operation);
+      }
+    });
+  });
 }
 
 function newGame() {
-  clearTransitions();
   game = new Game(game ? game.start.isOne() : true);
-  var cnt = 1;
-  game.operations.forEach(op => {
-    var div = $("<div class='layout'></div>");
-    var header = $("<div class='header'></div>");
-    var main = $("<div class='main'></div>");
-    var footer = $("<div class='footer'></div>");
-    header.append("<div class='cost'>" + op.cost + "</div>");
-    var type;
-    switch(op.type) {
-      case 'R': type = 'Remove'; break;
-      case 'G': type = 'Get'; break;
-      case 'C': type = 'Change'; break;
-    }
-    header.append("<div class='type'>" + type + "</div>");
-    header.append("<div class='id'>" + op.id + "</div>");
-    var description = op.description;
-    description = description.replace(/(&#x268.;)/g, "<span class='die'>$1</span>");
-    main.append("<div>" + description + "</div>");
-    div.append(header);
-    div.append(main);
-    div.append(footer);
-    div.click((e) => {
-      if (!overlay && !game.solved && game.isOperationAvailable(op)) {
-        e.stopPropagation();
-        applyOperation(op);
-      }
-    });
-    $("#c" + cnt++).html(div);
-  });
-  $("#clay").html(renderDice(game.start));
-  $("#iron").html(renderDice(game.targets[0]));
-  $("#gold").html(renderDice(game.targets[1]));
+  renderCards();
+  renderGoals();
+  updateButtonState();
 }
 
-function clearTransitions() {
-  for (var i = 1; i <= 15; i++) {
-    $("#c" + i + " .footer").empty();
+function showSolution() {
+  game.reset();
+  clearTransitions();
+  game.solution.transitions.forEach(transition => {
+    game.addTransition(transition);
+    renderLastTransition();
+  });
+  updateButtonState();
+}
+
+function resetGame() {
+  game.reset();
+  clearTransitions();
+  updateButtonState();
+}
+
+function goBack() {
+  var transitions = game.sequence.transitions.slice();
+  if (transitions.length > 0) {
+    transitions.pop();
+    game.reset();
+    clearTransitions();
+    transitions.forEach(transition => {
+      game.addTransition(transition);
+      renderLastTransition();
+    });
+    updateButtonState();
   }
 }
 
-function showOverlay(transitions) {
-  overlay = $("<div id='transitions'></div>");
-  transitions.forEach(tr => {
-    var entry = $("<div class='entry'></div>");
-    entry.html(renderDice(tr.end));
-    entry.click(() => {
-      game.addTransition(tr);
-      showLastTransition();
-      hideOverlay();
-    });
-    overlay.append(entry);
-  });
-  $("#game").append(overlay);
+function addTransition(transition) {
+  game.addTransition(transition);
+  renderLastTransition();
+  updateButtonState();
 }
 
-function hideOverlay() {
-  if (overlay) {
-    overlay.remove();
-    overlay = undefined;
-  }
-}
-
-function applyOperation(op) {
-  var transitions = op.transitions(game.sequence);
+function applyOperation(operation) {
+  var transitions = operation.transitions(game.sequence);
   if (transitions.length === 0) {
     return;
   }
   if (transitions.length === 1) {
-    game.addTransition(transitions[0]);
-    showLastTransition();
+    addTransition(transitions[0]);
     return;
   }
-  showOverlay(transitions);
+  renderOverlay(transitions);
 }
 
-function showLastTransition() {
+function renderOverlay(transitions) {
+  $overlay = $("<div id='transitions'></div>");
+  transitions.forEach(transition => {
+    var $entry = $("<div class='entry'></div>");
+    $entry.html(dice2Html(transition.end));
+    $entry.click(() => {
+      addTransition(transition);
+      hideOverlay();
+    });
+    $overlay.append($entry);
+  });
+  $game.append($overlay);
+}
+
+function renderCards() {
+  game.operations.forEach((operation, index) => {
+    var $layout = $("<div class='layout'></div>");
+    var $header = $("<div class='header'></div>");
+    var $main = $("<div class='main'></div>");
+    var $footer = $("<div class='footer'></div>");
+    $header.append("<div class='cost'>" + operation.cost + "</div>");
+    var type;
+    switch(operation.type) {
+      case 'R': type = 'Remove'; break;
+      case 'G': type = 'Get'; break;
+      case 'C': type = 'Change'; break;
+    }
+    $header.append("<div class='type'>" + type + "</div>");
+    $header.append("<div class='id'>" + operation.id + "</div>");
+    var description = operation.description;
+    description = description.replace(/(&#x268.;)/g, "<span class='die'>$1</span>");
+    $main.append("<div>" + description + "</div>");
+    $layout.append($header);
+    $layout.append($main);
+    $layout.append($footer);
+    $cards[index].html($layout);
+  });
+}
+
+function renderGoals() {
+  $clay.html(dice2Html(game.start));
+  $iron.html(dice2Html(game.targets[0]));
+  $gold.html(dice2Html(game.targets[1]));
+}
+
+function renderLastTransition() {
   var transition = game.sequence.lastTransition();
-  var card = game.operations.indexOf(transition.operation) + 1;
-  var footer = $("#c" + card + " .footer");
-  var step = $("<div class='step'>&#93" + (11 + game.sequence.length) + ";</div>");
-  footer.append(step);
-  var cost = $("<div class='cost'>" + game.cost + "</div>");
-  footer.append(cost);
+  var index = game.operations.indexOf(transition.operation);
+  var $footer = $cards[index].find(".footer");
+  var $step = $("<div class='step'>&#93" + (11 + game.sequence.length) + ";</div>");
+  $footer.append($step);
+  var $cost = $("<div class='cost'>" + game.cost + "</div>");
+  $footer.append($cost);
   if (game.solved && game.solution.cost == game.cost) {
-    step.addClass("optimal");
+    $step.addClass("optimal");
   }
-  var state = $("<div class='state'></div>");
-  state.addClass("remaining" + game.remainingTargets.length);
-  state.append(renderDice(transition.end));
-  footer.append(state);
+  var $state = $("<div class='state'></div>");
+  $state.addClass("remaining" + game.remainingTargets.length);
+  $state.append(dice2Html(transition.end));
+  $footer.append($state);
 }
 
-function showSolution() {
-  clearTransitions();
-  game.reset();
-  game.solution.transitions.forEach(tr => {
-    game.addTransition(tr);
-    showLastTransition();
+
+function clearTransitions() {
+  $cards.forEach($card => {
+    $card.find(".footer").empty();
   });
 }
 
-function resetGame() {
-  clearTransitions();
-  game.reset();
+function updateButtonState() {
+  var started = game.sequence.length > 0;
+  var finished = game.solved;
+  $new.prop("disabled", started && !finished);
+  $solve.prop("disabled", started);
+  $reset.prop("disabled", !started);
+  $back.prop("disabled", !started);
 }
 
-$(document).ready(function() {
-  newGame();
-  $("#game").click(() => {
-    hideOverlay();
-  });
-  $("#new").click(function() {
-    newGame();
-  });
-  $("#solve").click(function() {
-    showSolution();
-  });
-  $("#reset").click(function() {
-    resetGame();
-  });
-});
+function hideOverlay() {
+  if ($overlay) {
+    $overlay.remove();
+    $overlay = undefined;
+  }
+}
+
+function dice2Html(dice) {
+  var content;
+  var $span = $("<span class='dice'></span>");
+  content = "&#" + (9855 + dice.face1) + ";";
+  if (dice.areTwo()) {
+    content += "&#" + (9855 + dice.face2) + ";";
+  }
+  $span.append(content);
+  return $span;
+}
+
     </script>
   </head>
 
@@ -190,9 +266,10 @@ $(document).ready(function() {
         <div id="gold"></div>
       </div>
       <div id="actions">
-        <div id="new" class="button">New</div>
-        <div id="solve" class="button">Solve</div>
-        <div id="reset" class="button">Reset</div>
+        <button id="new">New</button>
+        <button id="solve">Solve</button>
+        <button id="reset">Reset</button>
+        <button id="back">Back</button>
       </div>
     </div>
   </body>

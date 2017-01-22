@@ -701,6 +701,19 @@ class Game {
     this.cost = this.sequence.cost;
     return true;
   }
+
+  removeLastTransition() {
+    if (this.sequence.length === 0) {
+      return false;
+    } else {
+      var sequence = this.sequence.slice(0, this.sequence.length);
+      this.reset();
+      sequence.transitions.forEach(transition => {
+        this.addTransition(transition);
+      });
+      return true;
+    }
+  }
 }
 
 module.exports = Game;

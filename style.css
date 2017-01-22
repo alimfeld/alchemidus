@@ -83,7 +83,7 @@ body, #game {
 #actions {
   display: flex;
 }
-#actions div {
+#actions button {
   flex: 1;
 }
 body {
@@ -92,16 +92,26 @@ body {
 .card {
   margin: 1px;
   padding: 4px;
-  border: 1px solid;
+  border: 1px solid lightgray;
   border-radius: 5px;
   text-align: center;
 }
-.button {
+.card:active {
+  border: 1px solid black;
+}
+button {
+  font-size: 1.1em;
   text-align: center;
   cursor: pointer;
   padding: 8px 0;
+  margin: 2px;
   background: ghostwhite;
-  border: 1px solid gray;
+  border: 1px solid lightgray;
+  border-radius: 5px;
+}
+button:active {
+  background: lightgray;
+  border: 1px solid black;
 }
 .id {
   font-size: 0.5em;
